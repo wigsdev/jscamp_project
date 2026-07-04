@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <title>DevJobs - Empleos (React CDN)</title>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Listado con empleos y filtros para encontrar el trabajo de tus sueños usando React desde CDN.">
+
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Carga de React y ReactDOM a través de ESM.sh -->
+  <script type="module">
+    import React from "https://esm.sh/react?dev";
+    import ReactDOM from "https://esm.sh/react-dom/client?dev";
+
+    window.React = React
+    window.ReactDOM = ReactDOM
+  </script>
+
+  <!-- Compilador Babel Standalone para transpilar JSX en tiempo de ejecución en el navegador -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="text/babel">
+    // MÓDULO 02b: PRIMEROS PASOS CON REACT (CDN)
+    // ==========================================
+    // TODO: 1. Crear el componente funcional `JobCard` que reciba props (titulo, empresa, ubicacion, descripcion).
+    // TODO: 2. Definir un estado `isApplied` usando `React.useState(false)`.
+    // TODO: 3. Crear una función handler `handleClick` que alterne el estado `isApplied`.
+    // TODO: 4. Estructurar el JSX retornado por `JobCard` usando los estilos de tarjeta de DevJobs y condicionales:
+    //          - Texto del botón: "Aplicado" o "Aplicar".
+    //          - Agregar clase CSS conditionally.
+    // TODO: 5. Crear el componente `App` que renderice un listado de varios `<JobCard />` con datos ficticios.
+    // TODO: 6. Obtener el elemento contenedor del DOM (`#root`) e inicializar la raíz con `ReactDOM.createRoot`.
+    // TODO: 7. Renderizar `<App />` dentro de la raíz.
+
+    // ¡Comienza tu código de React CDN aquí!
+    
+  </script>
+
+</head>
+
+<body>
+  <header>
+    <h1>
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+      DevJobs
+    </h1>
+
+    <nav>
+      <a href="">Empleos</a>
+    </nav>
+
+    <div>
+      <devjobs-avatar service="google" username="google.com" size="32">
+      </devjobs-avatar>
+    </div>
+  </header>
+
+  <main>
+    <section class="jobs-search">
+      <h1>React.js, primeros pasos con CDN</h1>
+    </section>
+
+    <section>
+      <h2>Empleos disponibles</h2>
+      <!-- Contenedor donde se montará la aplicación de React -->
+      <div id="root"></div>
+    </section>
+  </main>
+
+  <footer>
+    <small>&copy; 2025 DevJobs. Todos los derechos reservados.</small>
+  </footer>
+</body>
+
+</html>

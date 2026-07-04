@@ -1,0 +1,15 @@
+name: 🚀 Integración Continua (CI)
+
+# MÓDULO 09: CONFIGURACIÓN DE INTEGRACIÓN CONTINUA (CI/CD)
+# =======================================================
+# TODO: 1. Definir los disparadores (triggers) del workflow (ej. al hacer push o pull_request a la rama main/master).
+# TODO: 2. Definir un job llamado `test` que se ejecute en `ubuntu-latest`.
+# TODO: 3. Agregar los siguientes pasos (steps) en el job:
+#          - Clonar el repositorio usando `actions/checkout@v4`.
+#          - Configurar Node.js usando `actions/setup-node@v4` (especificando la versión de Node, ej. 20).
+#          - Instalar pnpm (usando `pnpm/action-setup@v3` o mediante npm).
+#          - Instalar las dependencias del proyecto usando `pnpm install` (o npm install / yarn / bun).
+#          - Ejecutar las pruebas unitarias y de integración (`pnpm run test` o `npm test`).
+#          - Ejecutar el linter de código (`pnpm run lint` o `npm run lint`).
+
+# ¡Comienza tu configuración de GitHub Actions aquí abajo!
