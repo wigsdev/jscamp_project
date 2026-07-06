@@ -1,0 +1,10 @@
+services:
+  ai-app:
+    build: .
+    ports:
+      - "5002:5000"
+    environment:
+      - LLM_URL=http://model-runner.docker.internal:12434/v1/
+    extra_hosts:
+      - "model-runner.docker.internal:host-gateway" # Permite comunicarse con el motor de IA local en el Host
+
