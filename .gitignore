@@ -9,7 +9,3 @@ dist/
 
 # Runtime data (Docker volumes example)
 10-docker/04-volumes/data/
-
-# Local Cheat-Sheet
-10-docker/commands.txt
-
