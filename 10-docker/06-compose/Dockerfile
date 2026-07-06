@@ -9,4 +9,12 @@
 # TODO: 7. Configurar el usuario no root por seguridad (`USER node`).
 # TODO: 8. Definir el comando de inicio (`node server.js`).
 
-# ¡Comienza tu Dockerfile aquí!
+# Imagen de la app (se construye desde compose.yaml con "build: .")
+FROM node:22-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY . .
+EXPOSE 3000
+USER node
+CMD [ "node", "server.js" ]
