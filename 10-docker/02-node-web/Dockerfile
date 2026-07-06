@@ -9,4 +9,19 @@
 # TODO: 7. Configurar la ejecución bajo un usuario no root (`USER node`) por seguridad.
 # TODO: 8. Definir el comando de inicio (`node server.js`).
 
-# ¡Comienza tu Dockerfile aquí!
+FROM node:22-alpine
+
+WORKDIR /app
+
+# esto es CLAVE para la caché
+COPY package*.json ./
+
+RUN npm ci 
+
+COPY . .
+
+EXPOSE 3000
+
+USER node
+
+CMD [ "node", "server.js" ]
