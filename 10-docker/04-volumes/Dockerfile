@@ -6,4 +6,12 @@
 # TODO: 4. Exponer el puerto del servidor.
 # TODO: 5. Definir el comando para ejecutar `server.js` (esta app escribe en un archivo local, el cual persistiremos usando volúmenes externos al correr el contenedor).
 
-# ¡Comienza tu Dockerfile aquí!
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY server.js .
+
+EXPOSE 3000
+
+CMD [ "node", "server.js" ]
