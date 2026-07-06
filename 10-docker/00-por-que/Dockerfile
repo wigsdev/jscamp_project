@@ -5,4 +5,10 @@
 # TODO: 3. Copiar el archivo `app.js` al directorio de trabajo en el contenedor.
 # TODO: 4. Definir el comando por defecto para iniciar la aplicación (`node app.js`).
 
-# ¡Comienza tu Dockerfile aquí!
+FROM node:22-alpine
+
+WORKDIR /app
+
+COPY app.js .
+
+CMD ["node", "app.js"]
