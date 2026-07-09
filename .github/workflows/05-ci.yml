@@ -16,8 +16,15 @@ jobs:
       - name: Preparar pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: 11
+          version: 10
           run_install: false
+            
+      - name: Approve builds
+        run: |
+          cd 09-ci-cd
+          pnpm config set auto-install-peers true --location=project
+          pnpm --version
+          pnpm approve-builds --all
       
       - name: Instalar dependencias
         run: |
