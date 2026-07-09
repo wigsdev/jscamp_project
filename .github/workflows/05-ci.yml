@@ -7,52 +7,50 @@ on:
     branches: [main]
 
 jobs:
-  ci:
+  frontend-lint:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Preparar pnpm
-        uses: pnpm/action-setup@v6
-        with:
-          version: 10
-          run_install: false
-            
-      - name: Approve builds
-        run: |
-          cd 09-ci-cd
-          pnpm config set auto-install-peers true --location=project
-          pnpm --version
-          pnpm approve-builds --all
-      
-      - name: Instalar dependencias
-        run: |
-          cd 09-ci-cd
-          echo "::group::Instalar dependencias"
-          pnpm install --frozen-lockfile
-          echo "::endgroup::"
-
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-pnpm-ci-cd
       - name: Lint
         run: |
           cd 09-ci-cd
           echo "::group::Lint"
-          pnpm lint
+          pnpm lint:frontend
           echo "::endgroup::"
 
+  frontend-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-pnpm-ci-cd
       - name: Test
         run: |
           cd 09-ci-cd
           echo "::group::Test"
-          pnpm test
+          pnpm test:frontend
           echo "::endgroup::"
 
-      - name: Build
+  backend-lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-pnpm-ci-cd
+      - name: Lint
         run: |
           cd 09-ci-cd
-          echo "::group::Build"
-          pnpm build
+          echo "::group::Lint"
+          pnpm lint:backend
           echo "::endgroup::"
-
-      
-        
+          
+  backend-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./.github/actions/setup-pnpm-ci-cd
+      - name: Test
+        run: |
+          cd 09-ci-cd
+          echo "::group::Test"
+          pnpm test:backend
+          echo "::endgroup::"
