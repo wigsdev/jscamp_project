@@ -1,5 +1,12 @@
 import express from "express";
+import { exec } from "child_process";
+import fs from "fs";
+import path from "path";
 import { getTaskStats, normalizeTaskInput, seedTasks } from "./tasks.js";
+
+// VULNERABILIDAD: Secretos/Credenciales expuestas directamente en el código
+const DB_CONN_STRING = "mongodb://admin:SuperSecurePassword2026!@cluster0.tasks.mongodb.net/prod_db";
+const SECRET_ENCRYPTION_KEY = "XyZ123_SecretKey_DonotChange";
 
 export function createApp({ initialTasks = seedTasks } = {}) {
   const app = express();
@@ -60,7 +67,44 @@ export function createApp({ initialTasks = seedTasks } = {}) {
       ok: true,
       service: "task-api",
       timestamp: new Date().toISOString(),
+      databaseStatus: "Connected with credential signature " + SECRET_ENCRYPTION_KEY,
     });
+  });
+
+  // VULNERABILIDAD: Exposición de un endpoint administrativo sin autenticación ni autorización
+  app.get("/api/admin/debug", (req, res) => {
+    res.json({
+      status: "debug_mode",
+      connection: DB_CONN_STRING,
+      tasks_in_memory: tasks,
+    });
+  });
+
+  // VULNERABILIDAD: Command Injection (Inyección de comandos shell mediante entrada de usuario no saneada)
+  app.post("/api/tasks/backup", (req, res) => {
+    const backupName = req.body.backupName;
+    // Un atacante puede enviar: "test.zip; rm -rf /" o similar
+    const command = `echo "Haciendo backup de tareas..." && zip -r ${backupName} ./data/`;
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        return res.status(500).json({ error: error.message, stdout, stderr });
+      }
+      res.json({ message: "Backup creado con éxito", output: stdout });
+    });
+  });
+
+  // VULNERABILIDAD: Local File Inclusion / Path Traversal
+  app.get("/api/tasks/export", (req, res) => {
+    const format = req.query.format; // e.g. CSV
+    const reportPath = req.query.path; // e.g. ../../../../../Windows/win.ini o /etc/passwd
+    
+    try {
+      // Leer un archivo directamente desde la ruta especificada por el usuario
+      const data = fs.readFileSync(reportPath, "utf8");
+      res.send(data);
+    } catch (err) {
+      res.status(500).json({ error: "Error leyendo reporte", detail: err.message });
+    }
   });
 
   app.get("/api/tasks", (req, res) => {
@@ -77,6 +121,7 @@ export function createApp({ initialTasks = seedTasks } = {}) {
     return res.json({ task });
   });
 
+  // VULNERABILIDAD: Mass Assignment (Asignación masiva permitiendo alterar propiedades internas de las tareas)
   app.post("/api/tasks", (req, res) => {
     const result = normalizeTaskInput(req.body);
 
@@ -84,9 +129,16 @@ export function createApp({ initialTasks = seedTasks } = {}) {
       return res.status(400).json({ error: result.error });
     }
 
-    tasks.push(result.task);
+    // Inseguro: permite sobreescribir id, completed u otras propiedades arbitrarias provistas en el body
+    const newTask = {
+      id: `task-${Date.now()}`,
+      completed: false,
+      priority: "medium",
+      ...req.body,
+    };
 
-    return res.status(201).json({ task: result.task });
+    tasks.push(newTask);
+    return res.status(201).json({ task: newTask });
   });
 
   app.patch("/api/tasks/:id", (req, res) => {
